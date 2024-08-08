@@ -1,4 +1,6 @@
 from bookshelf.model import Book
 
 #Update a Book title
-Book.title = "Nineteen Eighty-Four"
+book = Book.objects.filter(title="1987")
+book.title = "Nineteen Eighty-Four"
+movify_db.save()
