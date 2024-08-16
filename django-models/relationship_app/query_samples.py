@@ -23,11 +23,11 @@ NY_Lib = Library(name="New York Library")
 Enu_Lib = Library(name="Enugu Library")
 
 #Query all books by a specific author
-book = Book.object.filter(author="Amanda Okoro")
+book = Book.objects.filter(author="Amanda Okoro")
 book.all()
 #list all books in the library
 library_name = "New York Library"
-books = Library.object.get(name=library_name)
+books = Library.objects.get(name=library_name)
 books.all()
 #Retrieve the librarian for a library.
-q3 = Librarian.object.filter(library ="New York Library")
+q3 = Librarian.objects.filter(library ="New York Library")
