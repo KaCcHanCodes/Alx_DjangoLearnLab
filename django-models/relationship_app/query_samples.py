@@ -23,8 +23,9 @@ NY_Lib = Library(name="New York Library")
 Enu_Lib = Library(name="Enugu Library")
 
 #Query all books by a specific author
-book = Book.objects.filter(author="Amanda Okoro")
-book.all()
+author_name = "Amanda Okoro"
+book = Author.objects.get(author=author_name)
+book.objects.filter(author=author_name)
 #list all books in the library
 library_name = "New York Library"
 books = Library.objects.get(name=library_name)
