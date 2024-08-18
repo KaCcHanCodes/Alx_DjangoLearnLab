@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth import login
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test, permission_required
 
 def list_books(request):
     '''This view should render a simple text list of book titles and their authors.'''
@@ -34,3 +34,18 @@ def librarian_view(request):
 @user_passes_test
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
+@permission_required('Book.can_add_book')
+def add_book(request):
+    Book.objects.all()
+    return render(request, 'relationship_app/add_book.html')
+
+@permission_required('Book.can_change_book')
+def edit_book(request):
+    Book.objects.all()
+    return render(request, 'relationship_app/edit_book.html')
+
+@permission_required('Book.can_delete_book')
+def delete_book(request):
+    Book.objects.all()
+    return render(request, 'relationship_app/delete_book.html')
