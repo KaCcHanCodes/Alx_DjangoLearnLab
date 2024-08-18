@@ -31,4 +31,4 @@ library_name = "New York Library"
 books = Library.objects.get(name=library_name)
 books.all()
 #Retrieve the librarian for a library.
-q3 = Librarian.objects.filter(library ="New York Library")
+librarian = Librarian.objects.get(library ="New York Library")
