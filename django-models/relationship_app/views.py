@@ -24,29 +24,26 @@ class register(CreateView):
     success_url = reverse_lazy(login)
     template_name = 'relationship_app/register.html'
 
-@user_passes_test
+@user_passes_test('ADMIN')
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
-@user_passes_test
+@user_passes_test('LIBRARIAN')
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
 
-@user_passes_test
+@user_passes_test('MEMBER')
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
 @permission_required('relationship_app.can_add_book')
 def add_book(request):
-    Book.objects.all()
     return render(request, 'relationship_app/add_book.html')
 
 @permission_required('relationship_app.can_change_book')
 def edit_book(request):
-    Book.objects.all()
     return render(request, 'relationship_app/edit_book.html')
 
 @permission_required('relationship_app.can_delete_book')
 def delete_book(request):
-    Book.objects.all()
     return render(request, 'relationship_app/delete_book.html')
