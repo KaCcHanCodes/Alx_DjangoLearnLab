@@ -25,12 +25,12 @@ class register(CreateView):
 
 @user_passes_test
 def admin_view(request):
-    return render(request, 'relationship_app/admin-view')
+    return render(request, 'relationship_app/admin_view.html')
 
 @user_passes_test
 def librarian_view(request):
-    return render(request, 'relationship_app/librarian-view')
+    return render(request, 'relationship_app/librarian_view.html')
 
 @user_passes_test
 def member_view(request):
-    return render(request, 'relationship_app/member-view')
+    return render(request, 'relationship_app/member_view.html')
