@@ -8,5 +8,8 @@ urlpatterns = [
     path('LibraryDetailView', views.library_view.as_view(), name='LibraryDetailView'),
     path('UserSignUp', views.register.as_view(), name='UserSignUp'),
     path('login', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
-    path('logout', LogoutView.as_view(template_name='relationship_app/logout.html', name='logout')),
+    path('logout', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
+    path('admin-view', views.admin_view, name='admin-view'),
+    path('librarian-view', views.librarian_view, name='librarian-view'),
+    path('member-view', views.member_view, name='member-view'),
 ]
