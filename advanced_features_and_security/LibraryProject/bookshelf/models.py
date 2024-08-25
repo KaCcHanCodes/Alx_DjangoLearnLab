@@ -13,7 +13,7 @@ class CustomUser(AbstractUser):
 
     REQUIRED_FIELDS = ["date_of_birth", "profile_photo"]
 
-class UserManager(BaseUserManager):
+class CustomUserManager(BaseUserManager):
     def create_user(self, date_of_birth, profile_photo, password = None):
         '''
         Creates and saves user with the following fields.
