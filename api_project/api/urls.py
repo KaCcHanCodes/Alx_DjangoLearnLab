@@ -7,5 +7,5 @@ from . import views
 # router.register(r'Book', )
 
 urlpatterns = [
-    path("api.urls", views.BookList.as_view(), name="BookList"),
+    path("api/", views.BookList.as_view(), name="api.urls"),
 ]
