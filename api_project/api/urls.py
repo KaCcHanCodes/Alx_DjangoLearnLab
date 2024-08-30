@@ -1,11 +1,11 @@
 from django.urls import include, path
-# from .views import 
+from .views import BookList
 from . import views
-# from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
-# router = DefaultRouter
-# router.register(r'Book', )
+api = SimpleRouter()
+api.register(r"Book", BookList)
 
 urlpatterns = [
-    path("api/", views.BookList.as_view(), name="api.urls"),
+    path("api/", include(api.urls)),
 ]
