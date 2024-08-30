@@ -7,6 +7,5 @@ api = SimpleRouter()
 api.register(r"Book", BookList)
 
 urlpatterns = [
-    path("api/", views.BookList.as_view(), name="BookList"),
+    path("api/", include("api.urls")),
 ]
-urlpatterns += api.urls
