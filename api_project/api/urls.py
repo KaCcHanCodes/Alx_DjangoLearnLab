@@ -3,13 +3,13 @@ from .views import BookList, BookViewSet
 from . import views
 from rest_framework.routers import SimpleRouter, DefaultRouter
 
-route = SimpleRouter()
-route.register(r"api.urls", BookList)
+api = SimpleRouter()
+api.register(r"Book", BookList)
 
 router = DefaultRouter()
 router.register(r'Book', BookViewSet)
 
 urlpatterns = [
-    path("api/", include(route.urls)),
+    path("api/", include("api.urls")),
     path('', include(router.urls)),
 ]
