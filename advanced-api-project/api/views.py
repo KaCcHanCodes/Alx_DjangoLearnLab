@@ -4,7 +4,7 @@ from .models import Book
 from rest_framework import mixins, filters
 from .forms import BookForm
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework as DjangoFilterBackend
 
 class BookListView(generics.ListAPIView):
     '''for retrieving all books.'''
@@ -13,10 +13,10 @@ class BookListView(generics.ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['title', 'author', 'publication_year']
-    filter_backends = [filters.SearchFilter]
+    SearchFilter = [filters.SearchFilter]
     search_fields = ['author', 'title']
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['username', 'email']
+    OrderingFilter = [filters.OrderingFilter]
+    ordering_fields = ['title', 'publication_year']
 
 class BookDetailView(generics.RetrieveAPIView):
     '''for retrieving a single book by ID.'''
