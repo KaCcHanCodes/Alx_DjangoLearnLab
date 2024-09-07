@@ -7,8 +7,3 @@ class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     publication_year = models.IntegerField(max_length=100)
-
-    class Meta:
-        Permissions = [
-            ()
-        ]
