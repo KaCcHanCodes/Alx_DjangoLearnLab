@@ -1,13 +1,12 @@
-from rest_framework.test import APIRequestFactory
-# from .models import Book, Author
-# from django.test import TestCase
+from rest_framework.test import APIRequestFactory, APITestCase
+from .models import Book
 
-# class BookTestCase(TestCase):
-#     def setup(self):
-#         Book.objects.create(title='Before The End',
-#                             author='toryiama', 
-#                             publication_date=2009
-#                             )
+class BookTestCase(APITestCase):
+    def setup(self):
+        Book.objects.create(title='Before The End',
+                            author='toryiama', 
+                            publication_date=2009
+                            )
 
 factory = APIRequestFactory()
 create_request = factory.post('/books/create/', {'title': 'Before The End', 'author': 'toryiama', 'publication_date': 2009})
