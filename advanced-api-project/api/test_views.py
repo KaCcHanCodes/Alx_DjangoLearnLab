@@ -23,7 +23,7 @@ class BookTestCase(APITestCase):
         }
         response = self.client.post(self.create_book_url, data, format='json')
         # Check that the response status code is 201 (created)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data, status.HTTP_201_CREATED)
 
 factory = APIRequestFactory()
 create_request = factory.post('/books/create/', {'title': 'Before The End', 'author': 'toryiama', 'publication_date': 2009})
