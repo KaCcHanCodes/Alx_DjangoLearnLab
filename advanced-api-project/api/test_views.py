@@ -25,7 +25,14 @@ class BookTestCase(APITestCase):
         # Check that the response status code is 201 (created)
         self.assertEqual(response.data, status.HTTP_201_CREATED)
 
-factory = APIRequestFactory()
-create_request = factory.post('/books/create/', {'title': 'Before The End', 'author': 'toryiama', 'publication_date': 2009})
-update_request = factory.post('/books/update/', {'title': 'Before The End'})
-delete_request = factory.post('/books/delete/', {'author': 'toryiama'})
+class UserTestCase(APITestCase):
+    def setup(self):
+        #Create a test user
+        self.user = User.objects.create_user(username='fred', password='testpass123')
+
+        self.client.login(username='fred', password='testpass123')
+
+# factory = APIRequestFactory()
+# create_request = factory.post('/books/create/', {'title': 'Before The End', 'author': 'toryiama', 'publication_date': 2009})
+# update_request = factory.post('/books/update/', {'title': 'Before The End'})
+# delete_request = factory.post('/books/delete/', {'author': 'toryiama'})
