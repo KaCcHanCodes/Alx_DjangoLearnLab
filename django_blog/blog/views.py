@@ -1,3 +1,5 @@
+from collections.abc import Callable
+from typing import Any
 from django.shortcuts import render, redirect
 from .forms import CustomUserForm, PostUpdate
 from django.contrib.auth.forms import AuthenticationForm
@@ -5,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, login
 from django.views.generic import DetailView, ListView, DeleteView, CreateView, UpdateView
 from .models import Post
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 def register(request):
     if request.method == 'POST':
@@ -65,14 +67,6 @@ class postdetail(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
 
-class postupdate(LoginRequiredMixin, UpdateView):
-    form_class = PostUpdate
-    template_name = 'blog/post_update.html'
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
-
 class postcreate(LoginRequiredMixin, CreateView):
     form_class = PostUpdate
     template_name = 'blog/post_form.html'
@@ -80,7 +74,21 @@ class postcreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+class postupdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    form_class = PostUpdate
+    template_name = 'blog/post_update.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
     
-class postdelete(LoginRequiredMixin, DeleteView):
+    def test_func(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).filter(author=self.request.user)
+    
+class postdelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'blog/post_confirm_delete.html'
+
+    def test_func(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).filter(author=self.request.user)
