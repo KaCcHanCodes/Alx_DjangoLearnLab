@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<form method="POST" action="">
+    {% csrf_token %}
+    <h3>LOGIN HERE - DJANGO BLOG</h3>
+    <h5>{{ form.username.label }}</h5>
+    {{ form.username }}
+    <h5>{{ form.password.label }}</h5>
+    {{ form.password }}
+    <input type="submit" value="Login">
+</form>

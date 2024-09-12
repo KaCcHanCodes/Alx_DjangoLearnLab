@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<form method="POST" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <h3>LOGOUT - DJANGO BLOG</h3>
+    <p>Are you sure you want to log out?</p>
+    <input type="submit" value="Logout">
+</form>
