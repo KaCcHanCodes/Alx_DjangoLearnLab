@@ -9,7 +9,15 @@
     <ul>
         {% for post in object_list %}
             <li>
-                <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a> - {{ post.author }}
+                <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a> - {{ post.author }} 
+                <p>
+                    Tags:
+                    {% for tag in post.tags.all %}
+                        <a href="{% url 'posts_by_tag' tag.name %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        No tags
+                    {% endfor %}
+                </p>
             </li>
         {% empty %}
             <li>No posts available.</li>

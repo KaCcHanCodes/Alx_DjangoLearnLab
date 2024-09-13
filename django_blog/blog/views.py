@@ -1,14 +1,12 @@
-from collections.abc import Callable
 from typing import Any
-from django.forms import BaseModelForm
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.db.models import Q
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomUserForm, PostForm, CommentForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, login
 from django.views.generic import DetailView, ListView, DeleteView, CreateView, UpdateView
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 def register(request):
@@ -121,3 +119,25 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).filter(author=self.request.user)
+    
+class TagsView(ListView):
+    model = Tag
+    template_name = 'blog/posts_by_tag.html'
+
+    def get_queryset(self):
+        tag_name = self.kwargs.get('name')
+        tag = get_object_or_404(Tag, name=tag_name)
+        return Post.objects.filter(tags=tag)
+
+
+class SearchResultView(ListView):
+    model =Post
+    template_name = 'blog/post_search_results.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        return Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__icontains=query)
+        )

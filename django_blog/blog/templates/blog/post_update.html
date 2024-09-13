@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Post</title>
+    <title>{% if object %}Edit{% else %}Create{% endif %} Post</title>
 </head>
 <body>
-    <h1>Edit Post</h1>
+    <h1>{% if object %}Edit{% else %}Create{% endif %} Post</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Update</button>
+        <button type="submit">Save</button>
     </form>
     <a href="{% url 'post_list' %}">Back to List</a>
 </body>
