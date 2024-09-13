@@ -94,7 +94,7 @@ class postdelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).filter(author=self.request.user)
     
-class commentcreate(LoginRequiredMixin, CreateView):
+class CommentCreateView(LoginRequiredMixin, CreateView):
     form_class = CommentForm
     template_name = 'blog/comment_form.html'
 
@@ -103,7 +103,7 @@ class commentcreate(LoginRequiredMixin, CreateView):
         form.instance.post_id = self.kwargs['pk']
         return super().form_valid(form)
     
-class commentupdate(LoginRequiredMixin, UpdateView):
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = CommentForm
     template_name = 'blog/comment_update_form.html'
 
@@ -112,7 +112,10 @@ class commentupdate(LoginRequiredMixin, UpdateView):
         form.instance.post_id = self.kwargs['pk']
         return super().form_valid(form)
     
-class commentdelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    def test_func(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).filter(author=self.request.user)
+    
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Comment
     template_name = 'blog/comment_confirm_delete.html'
 
