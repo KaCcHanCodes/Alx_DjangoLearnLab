@@ -120,8 +120,8 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).filter(author=self.request.user)
     
-class TagsView(ListView):
-    model = Tag
+class PostByTagListView(ListView):
+    model = Post
     template_name = 'blog/posts_by_tag.html'
 
     def get_queryset(self):
