@@ -7,10 +7,9 @@ class Post(models.Model):
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    class Meta:
-        permissions = [
-            ('Edit_Perm', 'Can edit a post'),
-            ('Delete_Perm', 'Can delete a post'),
-            ('View_Perm', 'Can see posts'),
-            ('Create_Perm', 'Can make a post'),
-        ]
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    Updated_at = models.DateTimeField(auto_now_add=True)

@@ -1,12 +1,14 @@
 from collections.abc import Callable
 from typing import Any
+from django.forms import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .forms import CustomUserForm, PostUpdate
+from .forms import CustomUserForm, PostForm, CommentForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, login
 from django.views.generic import DetailView, ListView, DeleteView, CreateView, UpdateView
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 def register(request):
@@ -55,8 +57,7 @@ def home(request):
 def profile(request):
     return render(request, 'blog/profile.html')
 
-@login_required
-class posts(ListView):
+class posts(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'blog/post_list.html'
 
@@ -68,7 +69,7 @@ class postdetail(DetailView):
     template_name = 'blog/post_detail.html'
 
 class postcreate(LoginRequiredMixin, CreateView):
-    form_class = PostUpdate
+    form_class = PostForm
     template_name = 'blog/post_form.html'
 
     def form_valid(self, form):
@@ -76,7 +77,7 @@ class postcreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 class postupdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    form_class = PostUpdate
+    form_class = PostForm
     template_name = 'blog/post_update.html'
 
     def form_valid(self, form):
@@ -89,6 +90,31 @@ class postupdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class postdelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'blog/post_confirm_delete.html'
+
+    def test_func(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).filter(author=self.request.user)
+    
+class commentcreate(LoginRequiredMixin, CreateView):
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form)
+    
+class commentupdate(LoginRequiredMixin, UpdateView):
+    form_class = CommentForm
+    template_name = 'blog/comment_update_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form)
+    
+class commentdelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
 
     def test_func(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).filter(author=self.request.user)
