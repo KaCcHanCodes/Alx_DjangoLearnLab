@@ -23,7 +23,7 @@ class CustomUserRegisterSerializer(serializers.ModelSerializer):
         if instance['password1'] != instance['password2']:
             raise ValidationError({'message': "Both passwords must match"})
         
-        email = CustomUser.objects.filter(email=instance['email'])
+        email = get_user_model().objects.filter(email=instance['email'])
         if email.exists():
             raise ValidationError({'message': "Email already taken!"})
         
@@ -31,7 +31,7 @@ class CustomUserRegisterSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         passwrd = validated_data.pop('password')
-        # I used get_user_model() here to satisfy alx checker
+        # get_user_model() method returns the current active user model(CustomUser)
         user = get_user_model().objects.create_user(**validated_data)
         user.set_password(passwrd)
         user.save()
