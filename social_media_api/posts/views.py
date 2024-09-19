@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import viewsets, generics
 from .serializers import PostSerializer, CommentSerializer
 from .models import Post, Comment
 from django.shortcuts import get_object_or_404
@@ -9,7 +9,7 @@ from rest_framework import filters
 
 # Post views
 
-class ListPost(generics.ListAPIView):
+class ListPost(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     query = Post.objects.all()
     pagination_class = LimitOffsetPagination
