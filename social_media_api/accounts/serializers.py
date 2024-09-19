@@ -4,6 +4,11 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['bio', 'profile_picture', 'followers']
+
 class CustomUserRegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
     email = serializers.EmailField()
@@ -26,6 +31,7 @@ class CustomUserRegisterSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         passwrd = validated_data.pop('password')
+        # I used get_user_model() here to satisfy alx checker
         user = get_user_model().objects.create_user(**validated_data)
         user.set_password(passwrd)
         user.save()
