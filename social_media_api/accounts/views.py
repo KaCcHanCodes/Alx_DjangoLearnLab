@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomUserRegisterSerializer, CustomUserLoginSerializer
 
 class UserLoginView(APIView):
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = CustomUserLoginSerializer(data=request.data)
         if serializer.is_valid():
             response = {
@@ -24,7 +24,7 @@ class UserLoginView(APIView):
                     'success': True,
                     'username': user.username,
                     'email': user.email,
-                    'token': token.key,
+                    'token': token.key
                 }
                 return Response(response, status=status.HTTP_200_OK)
             return Response(response, status=status.HTTP_400_BAD_REQUEST)

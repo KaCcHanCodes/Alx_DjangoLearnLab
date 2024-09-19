@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import CustomUser
 from rest_framework.exceptions import ValidationError
 from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model
 
 class CustomUserRegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
@@ -25,8 +26,7 @@ class CustomUserRegisterSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         passwrd = validated_data.pop('password')
-        passwrd2 = validated_data.pop('password2')
-        user = CustomUser.objects.create(**validated_data)
+        user = get_user_model().objects.create_user(**validated_data)
         user.set_password(passwrd)
         user.save()
         Token.objects.create(user=user)
