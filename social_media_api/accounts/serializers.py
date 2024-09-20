@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['bio', 'profile_picture', 'followers']
+        fields = ['bio', 'profile_picture', 'followers', 'following']
 
 class CustomUserRegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
