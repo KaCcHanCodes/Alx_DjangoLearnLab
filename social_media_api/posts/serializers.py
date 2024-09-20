@@ -11,7 +11,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['author', 'title', 'content', 'created_at', 'updated_at', 'comments']
+        fields = ['id', 'author', 'title', 'content', 'created_at', 'updated_at', 'comments']
 
     def create(self, validated_data):
         comments_data = validated_data.pop('comments')

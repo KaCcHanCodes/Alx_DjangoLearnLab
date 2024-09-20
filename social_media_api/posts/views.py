@@ -1,4 +1,4 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, permissions, status
 from .serializers import PostSerializer, CommentSerializer
 from .models import Post, Comment
 from django.shortcuts import get_object_or_404
@@ -6,6 +6,8 @@ from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters
+from  django.contrib.auth import get_user_model
+from rest_framework.response import Response
 
 # Post views
 
@@ -33,6 +35,16 @@ class DeletePost(generics.RetrieveDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
+
+class PostFeed(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        following_users = self.request.user.following.all()
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+        serializer = PostSerializer(posts, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Comment views
 
