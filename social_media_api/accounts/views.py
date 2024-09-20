@@ -8,6 +8,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 from .serializers import CustomUserRegisterSerializer, CustomUserLoginSerializer, CustomUserSerializer
 
 class UserLoginView(APIView):
@@ -70,7 +71,7 @@ class ProfileUpdateView(generics.UpdateAPIView):
 User = get_user_model()
 
 class FollowView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
@@ -82,7 +83,7 @@ class FollowView(generics.GenericAPIView):
             return Response({'following': "You are already following this user!"}, status=status.HTTP_400_BAD_REQUEST)
     
 class UnfollowView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
