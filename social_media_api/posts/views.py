@@ -22,6 +22,7 @@ class ListPost(viewsets.ModelViewSet):
 class CreatePost(generics.CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         author = get_object_or_404(settings.AUTH_USER_MODEL, id=self.request.data.get('author'))
