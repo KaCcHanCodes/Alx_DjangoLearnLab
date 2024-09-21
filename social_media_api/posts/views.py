@@ -102,5 +102,6 @@ class UnLikePost(generics.DestroyAPIView):
         try:
             like = Like.objects.get(user=request.user, post=post)
             like.delete()
+            return Response({'message': "Unliked successfully!"}, status=status.HTTP_200_OK)
         except Like.DoesNotExist:
-            return Response({'message': "Post Unliked!"}, status=status.HTTP_200_OK)
+            return Response({'message': "Action Failed!"}, status=status.HTTP_400_BAD_REQUEST)
