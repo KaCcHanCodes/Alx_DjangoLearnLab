@@ -79,7 +79,7 @@ class LikePost(generics.CreateAPIView):
     serializer_class = LikeSerializer
 
     def create(self, request, *args, **pk):
-        post = generics.get_object_or_404(Post, pk=self.pk['pk'])
+        post = generics.get_object_or_404(Post, pk=pk)
         if not Like.objects.filter(user=request.user, post=post).exists():
             Like.objects.get_or_create(user=request.user, post=post)
             Notification.objects.create(receipient=post.author, 
