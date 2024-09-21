@@ -35,7 +35,9 @@ class UpdatePost(generics.RetrieveUpdateAPIView):
 class DeletePost(generics.RetrieveDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
-    queryset = Post.objects.all()
+    
+    def get_object(self):
+        return generics.get_object_or_404(Post, author=self.request.user, pk=self.kwargs['pk'])
 
 class PostFeed(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -78,23 +80,25 @@ class LikePost(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = LikeSerializer
 
-    def create(self, request, *args, **pk):
+    def create(self, request, pk):
         post = generics.get_object_or_404(Post, pk=pk)
-        if not Like.objects.filter(user=request.user, post=post).exists():
+        try:
             Like.objects.get_or_create(user=request.user, post=post)
             Notification.objects.create(receipient=post.author, 
                                         actor=request.user, 
                                         verb = 'Like'
                                         )
             return Response({'message': 'Post liked successfully!'}, status=status.HTTP_200_OK)
+        except Like.DoesNotExist:
+            return Response({'message': 'Unable to like post twice!'}, status=status.HTTP_200_OK)
 
 class UnLikePost(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
     
-    def delete(self, request, *args, **kwargs):
-        post = generics.get_object_or_404(Post, pk=self.kwargs['pk'])
+    def delete(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
         try:
             like = Like.objects.get(user=request.user, post=post)
             like.delete()
-        except Like.DoesNotExist():
+        except Like.DoesNotExist:
             return Response({'message': "Post Unliked!"}, status=status.HTTP_200_OK)
