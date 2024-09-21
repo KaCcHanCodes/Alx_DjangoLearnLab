@@ -59,6 +59,7 @@ class ListComment(generics.ListAPIView):
 class CreateComment(generics.CreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         author = get_object_or_404(settings.AUTH_USER_MODEL, id=self.request.data.get('author'))
