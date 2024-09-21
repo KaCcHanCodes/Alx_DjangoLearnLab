@@ -1,6 +1,6 @@
 from rest_framework import viewsets, generics, permissions, status
-from .serializers import PostSerializer, CommentSerializer
-from .models import Post, Comment
+from .serializers import PostSerializer, CommentSerializer, LikeSerializer
+from .models import Post, Comment, Like
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
@@ -8,6 +8,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters
 from  django.contrib.auth import get_user_model
 from rest_framework.response import Response
+from notifications.models import Notification
 
 # Post views
 
@@ -70,3 +71,30 @@ class DeleteComment(generics.RetrieveDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
+
+# Like views
+
+class LikePost(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = LikeSerializer
+
+    def create(self, request, *args, **pk):
+        post = generics.get_object_or_404(Post, pk=self.pk['pk'])
+        if not Like.objects.filter(user=request.user, post=post).exists():
+            Like.objects.get_or_create(user=request.user, post=post)
+            Notification.objects.create(receipient=post.author, 
+                                        actor=request.user, 
+                                        verb = 'Like'
+                                        )
+            return Response({'message': 'Post liked successfully!'}, status=status.HTTP_200_OK)
+
+class UnLikePost(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    
+    def delete(self, request, *args, **kwargs):
+        post = generics.get_object_or_404(Post, pk=self.kwargs['pk'])
+        try:
+            like = Like.objects.get(user=request.user, post=post)
+            like.delete()
+        except Like.DoesNotExist():
+            return Response({'message': "Post Unliked!"}, status=status.HTTP_200_OK)
