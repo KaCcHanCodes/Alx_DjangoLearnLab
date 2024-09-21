@@ -26,6 +26,10 @@ class CreatePost(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         author = get_object_or_404(settings.AUTH_USER_MODEL, id=self.request.data.get('author'))
+        Notification.objects.create(receipient=self.request.user.follower, 
+                                        actor=request.user, 
+                                        verb = 'Like'
+                                        )
         return serializer.save(author=author)
     
 class UpdatePost(generics.RetrieveUpdateAPIView):
@@ -64,6 +68,10 @@ class CreateComment(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         author = get_object_or_404(settings.AUTH_USER_MODEL, id=self.request.data.get('author'))
+        Notification.objects.create(receipient=post.author, 
+                                        actor=request.user, 
+                                        verb = 'Like'
+                                        )
         return serializer.save(author=author)
    
 class UpdateComment(generics.RetrieveUpdateAPIView):
